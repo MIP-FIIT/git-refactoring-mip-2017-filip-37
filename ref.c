@@ -101,37 +101,30 @@ char s[201],k[51],z[51],p[101];
 int poz,i,c=0,r=0,a=0;
 ZAZNAM *p_akt,*p_novy,**prvy;
 
-printf (" Zadaj poziciu kam chces pridat zaznam : ");
 scanf (" %d",&poz);
 
 p_akt=p_prv;
 p_novy=(ZAZNAM *)malloc(sizeof(ZAZNAM));		
-																		
-	printf ("kategoria: ");											
+																										
 	scanf("%s",k);													
 	a=strlen(k);													
 	k[a]='\n';													
 	k[a+1]='\0';													
-	strcpy(p_novy->kategoria,k);
-	printf ("zancka: ");											
+	strcpy(p_novy->kategoria,k);								
 	scanf("%s",z);
 	a=strlen(z);
 	z[a]='\n';
 	z[a+1]='\0';
 	strcpy(p_novy->znacka,z);
-	printf ("predajca: ");
 	scanf("%s",p);
 	a=strlen(p);
 	p[a]='\n';
 	p[a+1]='\0';
 	strcpy(p_novy->predajca,p);
-	printf ("cena: ");
 	scanf(" %d",&c);
 	p_novy->cena=c;
-	printf ("rok: ");
 	scanf(" %d",&r);
 	p_novy->rok=r;
-	printf ("stav: ");
 	scanf("%s",s);
 	a=strlen(s);
 	s[a]='\n';
@@ -164,8 +157,6 @@ ZAZNAM *p_akt,*p_pred;
 char zadana_znacka[51],mala_znacka[51],mala_znacka_2[51];
 int i,j,cyklus,a=0;
 
-
-printf ("Zadaj znacku auta :");
 scanf (" %s",zadana_znacka);
 
 	for (i=0;(zadana_znacka[i])!= '\0';i++)				
@@ -215,7 +206,6 @@ void		hladat (int *poc_zaznamov,ZAZNAM *p_prv)
 int hladana_cena,i,poc=0;
 ZAZNAM *p_akt;
 
-printf ("Zadaj cenu auta : ");
 scanf (" %d",&hladana_cena);
 
 p_akt=p_prv;
@@ -245,14 +235,12 @@ ZAZNAM		*aktualizacia (int *poc_zaznamov,ZAZNAM *p_prv)
 int zadana_c=0,i,c,r,poc_a=0,a;
 char zadana_z[51],k[51],z[51],p[101],s[201];
 ZAZNAM *p_akt;
-
-printf ("Zadaj znacku auta : ");		
+	
 scanf(" %s",zadana_z);
 a=strlen(zadana_z);
 zadana_z[a]='\n';
 zadana_z[a+1]='\0';
 
-printf ("Zadaj cenu auta : ");
 scanf(" %d",&zadana_c);
 
 p_akt=p_prv;
@@ -263,26 +251,20 @@ for (i=1;i<=*poc_zaznamov;i++){
 		poc_a++;
 		if (poc_a==1)					
 			{
-			printf ("kategoria: ");
 			scanf("%s",k);
 			a=strlen(k);
 			k[a]='\n';
 			k[a+1]='\0';
-			printf ("zancka: ");
 			scanf("%s",z);
 			a=strlen(z);
 			z[a]='\n';
 			z[a+1]='\0';
-			printf ("predajca: ");
 			scanf("%s",p);
 			a=strlen(p);
 			p[a]='\n';
 			p[a+1]='\0';
-			printf ("cena: ");
 			scanf("%d",&c);
-			printf ("rok: ");
 			scanf("%d",&r);
-			printf ("stav: ");
 			scanf("%s",s);
 			a=strlen(s);
 			s[a]='\n';
