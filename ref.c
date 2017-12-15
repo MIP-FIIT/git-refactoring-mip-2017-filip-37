@@ -19,11 +19,10 @@ typedef struct zaznam {
 
 ZAZNAM		*nacitaj (int *poc_zaznamov,int poc_n,ZAZNAM *p_prv)
 {
-
 FILE *fr;
-int i,r_int,c_int,poc=0;
-char s[201],k[51],z[51],p[101],r[20],c[20],q[3];
-ZAZNAM *p_akt,*p_uvolnit;
+int i;
+char q[3];
+ZAZNAM  *p_akt,*p_uvolnit;
 
 fr=fopen("auta.txt","r");
 
@@ -43,36 +42,33 @@ if (poc_n!=0)
 		}
 }
 p_prv=(ZAZNAM *)malloc(sizeof(ZAZNAM));			
-while ((fgets(s,200,fr))!=NULL)	{
+while ((fgets(q,3,fr))!=NULL)	{
 
-	if (s[0] =='$')
-	poc++;
-}
-*poc_zaznamov=poc;								
+	if (q[0] =='$')
+	(*poc_zaznamov)++;
+}								
 
 rewind(fr);
 p_akt=p_prv;
 
-for (i=1;i<=*poc_zaznamov;i++){
+for (i=1;i<=*poc_zaznamov;i++)
+{
 fgets(q,3,fr);																				
-fgets(k,51,fr);
-fgets(z,51,fr);
-fgets(p,101,fr);
-fgets(c,20,fr);		c_int=atoi(c);
-fgets(r,20,fr);		r_int=atoi(r);
-fgets(s,200,fr);
+
+fgets(p_akt->kategoria,51,fr);
+fgets(p_akt->znacka,51,fr);
+fgets(p_akt->predajca,101,fr);
+fscanf (fr,"%d\n",&p_akt->cena);
+fscanf (fr,"%d\n",&p_akt->rok);
+fgets(p_akt->stav,201,fr);
+
 p_akt->dalsi = (ZAZNAM *) malloc(sizeof(ZAZNAM));		
-strcpy(p_akt->kategoria,k);												
-strcpy(p_akt->znacka,z);
-strcpy(p_akt->predajca,p);
-p_akt->cena = c_int;
-p_akt->rok = r_int;
-strcpy(p_akt->stav,s);
 
 p_akt=p_akt->dalsi;								
 }
-printf ("Nacitalo sa %d zaznamov\n",poc);
+printf ("Nacitalo sa %d zaznamov\n",*poc_zaznamov);
 fclose(fr); 
+
 return p_prv;
 }			
 
