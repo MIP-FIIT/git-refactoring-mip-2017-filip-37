@@ -15,7 +15,15 @@ typedef struct zaznam {
 } ZAZNAM;			
 
 
-
+char		Zmensenie (char str[51]){
+	int i;
+	for (i=0;(str[i])!= '\0';i++)
+		{
+		str[i] = (tolower(str[i]));					
+		str[strlen(str)]='\0';
+		}
+	return *str;
+}
 
 ZAZNAM		*nacitaj (int *poc_zaznamov,int poc_n,ZAZNAM *p_prv)
 {
@@ -72,7 +80,6 @@ fclose(fr);
 return p_prv;
 }			
 
-
 void		vypis (int *poc_zaznamov,ZAZNAM *p_prv)
 {
 ZAZNAM *p_akt;
@@ -93,7 +100,6 @@ printf ("stav_vozidla: %s",p_akt->stav);
 p_akt=p_akt->dalsi;
 	}
 }
-
 
 ZAZNAM		*pridat (int *poc_zaznamov,ZAZNAM *p_prv)
 {
@@ -142,56 +148,48 @@ p_novy=(ZAZNAM *)malloc(sizeof(ZAZNAM));
 return p_prv;
 }
 
-
 ZAZNAM		*zmazat (int *poc_zaznamov,ZAZNAM *p_prv)
 {
 ZAZNAM *p_akt,*p_pred;													
-char zadana_znacka[51],mala_znacka[51],mala_znacka_2[51];
-int i,j,cyklus,a=0;
+char zadana_znacka[51];
+int i,pom_pocet,a=0;
 
 scanf (" %s",zadana_znacka);
 
-	for (i=0;(zadana_znacka[i])!= '\0';i++)				
-		{
-		mala_znacka[i] = (tolower(zadana_znacka[i]));						
-		mala_znacka[strlen(zadana_znacka)]='\0';
-		}
-	
-	cyklus=*poc_zaznamov;
+	Zmensenie (zadana_znacka);
+
+	pom_pocet=*poc_zaznamov;
 	p_pred=p_prv;			
 	p_akt=p_prv;
 
-	for (i=1;i<=cyklus;i++)
+	for (i=1;i<=pom_pocet;i++)
 	{
 		a++;
-		strcpy(mala_znacka_2,p_akt->znacka);
-
-		for (j=0;(mala_znacka_2[j])!= '\0';j++){
-			mala_znacka_2[j] = (tolower(mala_znacka_2[j]));					
-			mala_znacka_2[strlen(mala_znacka_2)]='\0';}
+		Zmensenie (p_akt->znacka);
 				
-		if((strstr(mala_znacka_2,mala_znacka))!=0)		{
-				if ((p_prv==p_akt)&&(*poc_zaznamov>1)){
+		if ((strstr(p_akt->znacka,zadana_znacka))!=0)
+		{
+				if (p_prv==p_akt){
 						p_prv=p_akt->dalsi;
 						free(p_akt);					
 						p_akt=p_prv;
 						p_pred=p_prv;
-						*poc_zaznamov=*poc_zaznamov -1 ;
+						(*poc_zaznamov)--;
 						a--;}
 				else{ 
 						p_pred->dalsi=p_akt->dalsi;
 						free(p_akt);					
 						p_akt=p_pred->dalsi;
-						*poc_zaznamov=*poc_zaznamov -1 ;}							
+						(*poc_zaznamov)--;}							
 			}
 		else{ 
 			p_akt=p_akt->dalsi;
-			if (a>=2)p_pred=p_pred->dalsi;}										
+			if (a>=2)p_pred=p_pred->dalsi;
+			}										
 	}
-	printf ("Vymazalo sa %d zaznamov.\n",cyklus-*poc_zaznamov);
+	printf ("Vymazalo sa %d zaznamov.\n",pom_pocet-*poc_zaznamov);
 	return p_prv;
 }
-
 
 void		hladat (int *poc_zaznamov,ZAZNAM *p_prv)
 {
