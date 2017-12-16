@@ -14,6 +14,24 @@ typedef struct zaznam {
 	struct zaznam *dalsi;
 } ZAZNAM;			
 
+void		Uvolnit (ZAZNAM *p_prv,int *poc_zaznamov){
+int i;
+ZAZNAM *p_akt,*p_uvolnit;
+
+p_akt=p_prv;
+	for (i=1;i<=*poc_zaznamov;i++)
+		{
+		p_uvolnit=p_akt;
+		p_akt=p_akt->dalsi;
+		free(p_uvolnit);
+		}
+}
+
+char		Uprava (char str[201]){
+	str[strlen(str)+1]='\0';
+	str[strlen(str)]='\n';
+	return *str;
+}
 
 char		Zmensenie (char str[51]){
 	int i;
@@ -40,18 +58,11 @@ if (fr==NULL) {
 }
 	
 if (poc_n!=0)									
-{
-	p_akt=p_prv;
-	for (i=1;i<=*poc_zaznamov;i++)
-		{
-		p_uvolnit=p_akt;
-		p_akt=p_akt->dalsi;
-		free(p_uvolnit);
-		}
-}
-p_prv=(ZAZNAM *)malloc(sizeof(ZAZNAM));			
-while ((fgets(q,3,fr))!=NULL)	{
+	Uvolnit(p_prv,poc_zaznamov);
 
+	p_prv=(ZAZNAM *)malloc(sizeof(ZAZNAM));			
+while ((fgets(q,3,fr))!=NULL)
+{
 	if (q[0] =='$')
 	(*poc_zaznamov)++;
 }								
@@ -120,14 +131,10 @@ p_novy=(ZAZNAM *)malloc(sizeof(ZAZNAM));
 	scanf ("\n");
 	gets(p_novy->stav); 
 
-	p_novy->kategoria[strlen(p_novy->kategoria)+1]='\0';
-	p_novy->kategoria[strlen(p_novy->kategoria)]='\n';	
-	p_novy->znacka[strlen(p_novy->znacka)+1]='\0';
-	p_novy->znacka[strlen(p_novy->znacka)]='\n';
-	p_novy->predajca[strlen(p_novy->predajca)+1]='\0';
-	p_novy->predajca[strlen(p_novy->predajca)]='\n';
-	p_novy->stav[strlen(p_novy->stav)+1]='\0';
-	p_novy->stav[strlen(p_novy->stav)]='\n';
+	Uprava(p_novy->kategoria);
+	Uprava(p_novy->znacka);
+	Uprava(p_novy->predajca);
+	Uprava(p_novy->stav);
  
 	if	((poz==1)||(*poc_zaznamov==0))		
 	{
@@ -222,55 +229,51 @@ if (poc==0) printf ("V ponuke su len auta s vyssou cenou");
 
 ZAZNAM		*aktualizacia (int *poc_zaznamov,ZAZNAM *p_prv)
 {
-int zadana_c=0,i,c,r,poc_a=0,a;
-char zadana_z[51],k[51],z[51],p[101],s[201];
-ZAZNAM *p_akt;
-	
-scanf(" %s",zadana_z);
-a=strlen(zadana_z);
-zadana_z[a]='\n';
-zadana_z[a+1]='\0';
+int zadana_c,i,poc_a=0;
+char zadana_z[51];
+ZAZNAM *p_akt,*p_aktualizovany;
+
+scanf ("\n");
+gets(zadana_z);
+Uprava(zadana_z);
 
 scanf(" %d",&zadana_c);
 
 p_akt=p_prv;
-for (i=1;i<=*poc_zaznamov;i++){
-
+for (i=1;i<=*poc_zaznamov;i++)
+{
 	if ((!strcmp(zadana_z,(p_akt->znacka)))&&(zadana_c==(p_akt->cena)))		
 	{
 		poc_a++;
 		if (poc_a==1)					
 			{
-			scanf("%s",k);
-			a=strlen(k);
-			k[a]='\n';
-			k[a+1]='\0';
-			scanf("%s",z);
-			a=strlen(z);
-			z[a]='\n';
-			z[a+1]='\0';
-			scanf("%s",p);
-			a=strlen(p);
-			p[a]='\n';
-			p[a+1]='\0';
-			scanf("%d",&c);
-			scanf("%d",&r);
-			scanf("%s",s);
-			a=strlen(s);
-			s[a]='\n';
-			s[a+1]='\0';
+			p_aktualizovany=(ZAZNAM *)malloc(sizeof(ZAZNAM));
+			scanf ("\n");
+			gets(p_aktualizovany->kategoria);
+			gets(p_aktualizovany->znacka);
+			gets(p_aktualizovany->predajca);
+			scanf("%d\n", &p_aktualizovany->cena);
+			scanf(" %d\n", &p_aktualizovany->rok);
+			scanf ("\n");
+			gets(p_aktualizovany->stav); 
+
+			Uprava(p_aktualizovany->kategoria);	
+			Uprava(p_aktualizovany->znacka);
+			Uprava(p_aktualizovany->predajca);
+			Uprava(p_aktualizovany->stav);
 			}
-		strcpy(p_akt->kategoria,k);				
-		strcpy(p_akt->znacka,z);
-		strcpy(p_akt->predajca,p);
-		p_akt->cena = c;
-		p_akt->rok = r;
-		strcpy(p_akt->stav,s);
+		strcpy(p_akt->kategoria,p_aktualizovany->kategoria);				
+		strcpy(p_akt->znacka,p_aktualizovany->znacka);
+		strcpy(p_akt->predajca,p_aktualizovany->predajca);
+		p_akt->cena = p_aktualizovany->cena;
+		p_akt->rok = p_aktualizovany->rok;
+		strcpy(p_akt->stav,p_aktualizovany->stav);
 	}
 	p_akt=p_akt->dalsi;
 }
 
 printf ("\nAktualizovalo sa %d zaznamov.\n",poc_a);
+free(p_aktualizovany);
 return p_prv;
 }
 
@@ -279,16 +282,10 @@ int			konec (ZAZNAM *p_prv,int *poc_zaznamov,int poc_n)
 {
 ZAZNAM *p_akt,*p_uvolnit;
 int i;
+
 if (poc_n!=0)			
-{
-	p_akt=p_prv;
-		for (i=1;i<=*poc_zaznamov;i++)
-			{
-			p_uvolnit=p_akt;
-			p_akt=p_akt->dalsi;
-			free(p_uvolnit);
-			}
-}
+	Uvolnit(p_prv,poc_zaznamov);
+
 return 1;
 }
 
