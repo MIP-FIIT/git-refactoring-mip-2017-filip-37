@@ -97,39 +97,31 @@ p_akt=p_akt->dalsi;
 
 ZAZNAM		*pridat (int *poc_zaznamov,ZAZNAM *p_prv)
 {
-char s[201],k[51],z[51],p[101];
-int poz,i,c=0,r=0,a=0;
-ZAZNAM *p_akt,*p_novy,**prvy;
+int poz,i;
+ZAZNAM *p_akt,*p_novy;
 
 scanf (" %d",&poz);
 
 p_akt=p_prv;
 p_novy=(ZAZNAM *)malloc(sizeof(ZAZNAM));		
-																										
-	scanf("%s",k);													
-	a=strlen(k);													
-	k[a]='\n';													
-	k[a+1]='\0';													
-	strcpy(p_novy->kategoria,k);								
-	scanf("%s",z);
-	a=strlen(z);
-	z[a]='\n';
-	z[a+1]='\0';
-	strcpy(p_novy->znacka,z);
-	scanf("%s",p);
-	a=strlen(p);
-	p[a]='\n';
-	p[a+1]='\0';
-	strcpy(p_novy->predajca,p);
-	scanf(" %d",&c);
-	p_novy->cena=c;
-	scanf(" %d",&r);
-	p_novy->rok=r;
-	scanf("%s",s);
-	a=strlen(s);
-	s[a]='\n';
-	s[a+1]='\0';
-	strcpy(p_novy->stav,s);												
+	
+	scanf ("\n");
+	gets(p_novy->kategoria);
+	gets(p_novy->znacka);
+	gets(p_novy->predajca);
+	scanf("%d\n", &p_novy->cena);
+	scanf(" %d\n", &p_novy->rok);
+	scanf ("\n");
+	gets(p_novy->stav); 
+
+	p_novy->kategoria[strlen(p_novy->kategoria)+1]='\0';
+	p_novy->kategoria[strlen(p_novy->kategoria)]='\n';	
+	p_novy->znacka[strlen(p_novy->znacka)+1]='\0';
+	p_novy->znacka[strlen(p_novy->znacka)]='\n';
+	p_novy->predajca[strlen(p_novy->predajca)+1]='\0';
+	p_novy->predajca[strlen(p_novy->predajca)]='\n';
+	p_novy->stav[strlen(p_novy->stav)+1]='\0';
+	p_novy->stav[strlen(p_novy->stav)]='\n';
  
 	if	((poz==1)||(*poc_zaznamov==0))		
 	{
@@ -146,7 +138,7 @@ p_novy=(ZAZNAM *)malloc(sizeof(ZAZNAM));
 		p_novy->dalsi=p_akt->dalsi;		
 		p_akt->dalsi=p_novy;
 	}
-*poc_zaznamov=*poc_zaznamov+1;		
+(*poc_zaznamov)++;	
 return p_prv;
 }
 
