@@ -14,7 +14,8 @@ typedef struct zaznam {
 	struct zaznam *dalsi;
 } ZAZNAM;			
 
-void		Uvolnit (ZAZNAM *p_prv,int *poc_zaznamov){
+void		Uvolnit	(ZAZNAM *p_prv,int *poc_zaznamov)	/* Funkcia na uvolnenie existujuceho spajaneho zoznamu */
+{
 int i;
 ZAZNAM *p_akt,*p_uvolnit;
 
@@ -27,13 +28,15 @@ p_akt=p_prv;
 		}
 }
 
-char		Uprava (char str[201]){
+char		Uprava (char str[201])	/* Funkcia na upravu stringu na tvar potrebny pri vypise */
+{
 	str[strlen(str)+1]='\0';
 	str[strlen(str)]='\n';
 	return *str;
 }
 
-char		Zmensenie (char str[51]){
+char		Zmensenie (char str[51])	/* Funkcia na zmensenie znakov stringu */
+{
 	int i;
 	for (i=0;(str[i])!= '\0';i++)
 		{
@@ -43,38 +46,40 @@ char		Zmensenie (char str[51]){
 	return *str;
 }
 
-ZAZNAM		*nacitaj (int *poc_zaznamov,int poc_n,ZAZNAM *p_prv)
+ZAZNAM		*nacitaj (int *poc_zaznamov,int poc_n,ZAZNAM *p_prv)	/* Funkcia na nacitanie informacii zo suboru 'auta.txt' */
 {
 FILE *fr;
 int i;
-char q[3];
+char $[3];
 ZAZNAM  *p_akt,*p_uvolnit;
 
 fr=fopen("auta.txt","r");
 
-if (fr==NULL) {
+if (fr==NULL)
+	{
 	printf ("Zaznamy neboli nacitane");
 	return NULL;
-}
+	}
 	
 if (poc_n!=0)									
-	Uvolnit(p_prv,poc_zaznamov);
+	Uvolnit(p_prv,poc_zaznamov);	/* Pokila zoznam existoval funkcia ho uvolni */
 
-	p_prv=(ZAZNAM *)malloc(sizeof(ZAZNAM));			
-while ((fgets(q,3,fr))!=NULL)
-{
-	if (q[0] =='$')
+p_prv=(ZAZNAM *)malloc(sizeof(ZAZNAM));			
+
+while ((fgets($,3,fr))!=NULL)	/* Spocitanie zaznamov v subove podla pociatocneho znaku */
+	{
+	if ($[0] =='$')
 	(*poc_zaznamov)++;
-}								
+	}								
 
 rewind(fr);
 p_akt=p_prv;
 
 for (i=1;i<=*poc_zaznamov;i++)
 {
-fgets(q,3,fr);																				
+fgets($,3,fr);																				
 
-fgets(p_akt->kategoria,51,fr);
+fgets(p_akt->kategoria,51,fr);	/* Nacitanie informacii zo suboru */
 fgets(p_akt->znacka,51,fr);
 fgets(p_akt->predajca,101,fr);
 fscanf (fr,"%d\n",&p_akt->cena);
@@ -91,38 +96,36 @@ fclose(fr);
 return p_prv;
 }			
 
-void		vypis (int *poc_zaznamov,ZAZNAM *p_prv)
+void		vypis (int *poc_zaznamov,ZAZNAM *p_prv)	/* Funkcia na vypis nacitanych informacii */
 {
 ZAZNAM *p_akt;
-int i=1;
+int i;
 
 p_akt=p_prv;
-
-for (i=1;i<=*poc_zaznamov;i++){			
-
-printf ("%d.\n",i);
-printf ("kategoria: %s",p_akt->kategoria);
-printf ("znacka: %s",p_akt->znacka);
-printf ("predajca: %s",p_akt->predajca);
-printf ("cena: %d\n",p_akt->cena);
-printf ("rok_vyroby: %d\n",p_akt->rok);
-printf ("stav_vozidla: %s",p_akt->stav);
-
-p_akt=p_akt->dalsi;
+for (i=1;i<=*poc_zaznamov;i++)
+	{			
+	printf ("%d.\n",i);
+	printf ("kategoria: %s",p_akt->kategoria);
+	printf ("znacka: %s",p_akt->znacka);
+	printf ("predajca: %s",p_akt->predajca);
+	printf ("cena: %d\n",p_akt->cena);
+	printf ("rok_vyroby: %d\n",p_akt->rok);
+	printf ("stav_vozidla: %s",p_akt->stav);
+	p_akt=p_akt->dalsi;
 	}
 }
 
-ZAZNAM		*pridat (int *poc_zaznamov,ZAZNAM *p_prv)
+ZAZNAM		*pridat (int *poc_zaznamov,ZAZNAM *p_prv)	/* Funkcia na pridanie zaznamu do spajaneho zoznamu */
 {
-int poz,i;
+int pozicia,i;
 ZAZNAM *p_akt,*p_novy;
 
-scanf (" %d",&poz);
+scanf (" %d",&pozicia);
 
 p_akt=p_prv;
 p_novy=(ZAZNAM *)malloc(sizeof(ZAZNAM));		
 	
-	scanf ("\n");
+	scanf ("\n");				/* nacitanie noveho zaznamu */
 	gets(p_novy->kategoria);
 	gets(p_novy->znacka);
 	gets(p_novy->predajca);
@@ -136,21 +139,21 @@ p_novy=(ZAZNAM *)malloc(sizeof(ZAZNAM));
 	Uprava(p_novy->predajca);
 	Uprava(p_novy->stav);
  
-	if	((poz==1)||(*poc_zaznamov==0))		
-	{
+	if	((pozicia==1)||(*poc_zaznamov==0))		/* Ak pridavame zaznamu na prve miesto alebo do prazdneho zoznamu */
+		{
 		p_novy->dalsi=p_akt;	
 		p_prv=p_novy;	
-	}
+		}
 	else
-	{
-		if (poz>*poc_zaznamov) poz=*poc_zaznamov+1;		
+		{
+		if (pozicia>*poc_zaznamov) pozicia=*poc_zaznamov+1;		 /* Ak je pozicia vacsia ako pocet zaznamov , zaznam sa prida na koniec */
 
-		for (i=1;i<=poz-2;i++)		
+		for (i=1;i<=pozicia-2;i++)		
 			p_akt=p_akt->dalsi;
 
 		p_novy->dalsi=p_akt->dalsi;		
 		p_akt->dalsi=p_novy;
-	}
+		}
 (*poc_zaznamov)++;	
 return p_prv;
 }
@@ -159,46 +162,49 @@ ZAZNAM		*zmazat (int *poc_zaznamov,ZAZNAM *p_prv)
 {
 ZAZNAM *p_akt,*p_pred;													
 char zadana_znacka[51];
-int i,pom_pocet,a=0;
+int i,pom_pocet,posuvanie_pred=0;
 
-scanf (" %s",zadana_znacka);
-
+scanf (" %s",zadana_znacka);	/* Nacitanie a uprava znacky */
 	Zmensenie (zadana_znacka);
 
-	pom_pocet=*poc_zaznamov;
-	p_pred=p_prv;			
-	p_akt=p_prv;
+pom_pocet=*poc_zaznamov;
+p_pred=p_prv;			
+p_akt=p_prv;
 
-	for (i=1;i<=pom_pocet;i++)
+for (i=1;i<=pom_pocet;i++)
 	{
-		a++;
-		Zmensenie (p_akt->znacka);
+	posuvanie_pred++;
+	Zmensenie (p_akt->znacka);
 				
-		if ((strstr(p_akt->znacka,zadana_znacka))!=0)
+		if ((strstr(p_akt->znacka,zadana_znacka))!=0)	/* Pokial je zadana znacka podretazec tej v zazname tak sa zaznam zmaze */
 		{
-				if (p_prv==p_akt){
-						p_prv=p_akt->dalsi;
-						free(p_akt);					
-						p_akt=p_prv;
-						p_pred=p_prv;
-						(*poc_zaznamov)--;
-						a--;}
-				else{ 
-						p_pred->dalsi=p_akt->dalsi;
-						free(p_akt);					
-						p_akt=p_pred->dalsi;
-						(*poc_zaznamov)--;}							
+		if (p_prv==p_akt)	
+			{
+			p_prv=p_akt->dalsi;
+			free(p_akt);					
+			p_akt=p_prv;
+			p_pred=p_prv;
+			(*poc_zaznamov)--;
+			posuvanie_pred--;
 			}
-		else{ 
-			p_akt=p_akt->dalsi;
-			if (a>=2)p_pred=p_pred->dalsi;
-			}										
+			else{ 
+				p_pred->dalsi=p_akt->dalsi;
+				free(p_akt);					
+				p_akt=p_pred->dalsi;
+				(*poc_zaznamov)--;
+				}							
+		}
+		else
+		{ 
+		p_akt=p_akt->dalsi;
+		if (posuvanie_pred>=2)	p_pred=p_pred->dalsi;	/* Ak je aktualny zaznam o 2 zaznamy dalej ako predchadzajuci tak predchadzajuci posunie za aktualny */
+		}										
 	}
-	printf ("Vymazalo sa %d zaznamov.\n",pom_pocet-*poc_zaznamov);
-	return p_prv;
+printf ("Vymazalo sa %d zaznamov.\n",pom_pocet-*poc_zaznamov);
+return p_prv;
 }
 
-void		hladat (int *poc_zaznamov,ZAZNAM *p_prv)
+void		hladat (int *poc_zaznamov,ZAZNAM *p_prv)	/* Funkcia na vyhladanie zaznamov z rovnakou alebo nizsou cenou ako bola zadana */
 {
 int hladana_cena,i,poc=0;
 ZAZNAM *p_akt;
@@ -206,9 +212,8 @@ ZAZNAM *p_akt;
 scanf (" %d",&hladana_cena);
 
 p_akt=p_prv;
-
-for (i=1;i<=*poc_zaznamov;i++){	
-
+for (i=1;i<=*poc_zaznamov;i++)
+	{	
 	if	((p_akt->cena)<=hladana_cena)			
 			{
 			poc++;
@@ -222,30 +227,29 @@ for (i=1;i<=*poc_zaznamov;i++){
 			p_akt=p_akt->dalsi;
 			}
 	else p_akt=p_akt->dalsi;
-}
+	}
 if (poc==0) printf ("V ponuke su len auta s vyssou cenou");
 }
 
-
-ZAZNAM		*aktualizacia (int *poc_zaznamov,ZAZNAM *p_prv)
+ZAZNAM		*aktualizacia (int *poc_zaznamov,ZAZNAM *p_prv)	/* Funkcia na aktualizovanie zaznamu podla zadanej znacky a ceny */
 {
-int zadana_c,i,poc_a=0;
-char zadana_z[51];
+int zadana_cena,i,poc_aktualizacii=0;
+char zadana_znacka[51];
 ZAZNAM *p_akt,*p_aktualizovany;
 
-scanf ("\n");
-gets(zadana_z);
-Uprava(zadana_z);
+scanf ("\n");			/* Nacitanie a uprava znacky */
+gets(zadana_znacka);
+Uprava(zadana_znacka);
 
-scanf(" %d",&zadana_c);
+scanf(" %d",&zadana_cena);	/* nacitanie ceny */
 
 p_akt=p_prv;
 for (i=1;i<=*poc_zaznamov;i++)
 {
-	if ((!strcmp(zadana_z,(p_akt->znacka)))&&(zadana_c==(p_akt->cena)))		
+	if ((!strcmp(zadana_znacka,(p_akt->znacka)))&&(zadana_cena==(p_akt->cena)))	/* Ak sa zhoduje znacka aj cena */
 	{
-		poc_a++;
-		if (poc_a==1)					
+		poc_aktualizacii++;
+		if (poc_aktualizacii==1)	/* Ak sa zhoduje v jednom pripade tak nacitame aktualizovany zaznam */
 			{
 			p_aktualizovany=(ZAZNAM *)malloc(sizeof(ZAZNAM));
 			scanf ("\n");
@@ -262,7 +266,7 @@ for (i=1;i<=*poc_zaznamov;i++)
 			Uprava(p_aktualizovany->predajca);
 			Uprava(p_aktualizovany->stav);
 			}
-		strcpy(p_akt->kategoria,p_aktualizovany->kategoria);				
+		strcpy(p_akt->kategoria,p_aktualizovany->kategoria);	 /* V ostatnych pripadoch zhody uz nenacitavame ale len prepisujeme stary zaznam aktualizovanym */	
 		strcpy(p_akt->znacka,p_aktualizovany->znacka);
 		strcpy(p_akt->predajca,p_aktualizovany->predajca);
 		p_akt->cena = p_aktualizovany->cena;
@@ -272,20 +276,16 @@ for (i=1;i<=*poc_zaznamov;i++)
 	p_akt=p_akt->dalsi;
 }
 
-printf ("\nAktualizovalo sa %d zaznamov.\n",poc_a);
-free(p_aktualizovany);
+printf ("\nAktualizovalo sa %d zaznamov.\n",poc_aktualizacii);
+free(p_aktualizovany);	/* aktualizovany zaznam na konci funkcie uvolnime */
 return p_prv;
 }
 
-
-int			konec (ZAZNAM *p_prv,int *poc_zaznamov,int poc_n)
+int			konec (ZAZNAM *p_prv,int *poc_zaznamov)	/* Funkcia na ukoncenie programu */
 {
 ZAZNAM *p_akt,*p_uvolnit;
-int i;
 
-if (poc_n!=0)			
-	Uvolnit(p_prv,poc_zaznamov);
-
+Uvolnit(p_prv,poc_zaznamov);	/* uvolnenie zoznamu a funkcia vrati '1' (cize program moze skoncit) */
 return 1;
 }
 
@@ -294,42 +294,44 @@ int			main ()
 {
 ZAZNAM *p_prv=NULL;
 char pismeno;
-int poc_zaznamov=0,poc_n=0,k=0,otvorenie_suboru=0;
+int poc_zaznamov=0,zoznam=0,end=0;
 
 do{
-	scanf (" %c",&pismeno);
-	switch (pismeno){
-	
-
-	case 'n' :	p_prv=nacitaj(&poc_zaznamov,poc_n,p_prv) ;
-				poc_n=1;		
-				break;
-	
-	case 'v' :  if (poc_n==1)		
-				{vypis (&poc_zaznamov,p_prv);}
-				break;
-	
-	case 'p' :	p_prv=pridat(&poc_zaznamov,p_prv);
-				poc_n=1;			
-				break;
-	
-	case 'z' :	if (poc_n==1)		
-				{p_prv=zmazat(&poc_zaznamov,p_prv);}
-				break;
-	
-	case 'h' :	if (poc_n==1)		
-				{hladat(&poc_zaznamov,p_prv);}
-				break;
-	
-	case 'a' :	if (poc_n==1)		 
-				{p_prv=aktualizacia(&poc_zaznamov,p_prv);}
-				break;
-	
-	case 'k' :	 if (poc_n==1){
-				k=konec(p_prv,&poc_zaznamov,poc_n);
-				break;}
-				k=1;
+	scanf (" %c",&pismeno);	/* Nacitanie znaku pre volbu funkcie */
+	switch (pismeno)
+	{
+	case 'n' :	p_prv=nacitaj(&poc_zaznamov,zoznam,p_prv) ;
+				zoznam=1;		/* Ak sa zoznam == 1 tak existuje */
 				break;
 
+	case 'v' :  if (zoznam==1)		/* Pokial zoznam existuje prebehne funkcia */
+					vypis (&poc_zaznamov,p_prv);						
+				break;											
+																
+	case 'p' :	p_prv=pridat(&poc_zaznamov,p_prv);				
+				zoznam=1;	/* Zoznam urcite existuje ak prebehla funkcia pridaj */								
+				break;											
+															
+	case 'z' :	if (zoznam==1)	/* Pokial zoznam existuje prebehne funkcia */	
+					p_prv=zmazat(&poc_zaznamov,p_prv);			
+				break;											
+																
+	case 'h' :	if (zoznam==1)	/* Pokial zoznam existuje prebehne funkcia */	
+					hladat(&poc_zaznamov,p_prv);
+				break;
+	
+	case 'a' :	if (zoznam==1)	/* Pokial zoznam existuje prebehne funkcia */	 
+					p_prv=aktualizacia(&poc_zaznamov,p_prv);
+				break;
+	
+	case 'k' :	 if (zoznam==1)	/* Pokial zoznam existuje prebehne funkcia */
+					{
+					end=konec(p_prv,&poc_zaznamov); /* Do premennej end sa priradi '1' takze program skonci */
+					break;
+					}
+				end=1; /* Ak zoznam neexistuje ale bolo zadanie 'k' tak program skonci */
+				break;
+
+	}
+  }while (end!=1);
 }
-}while (k!=1);}
