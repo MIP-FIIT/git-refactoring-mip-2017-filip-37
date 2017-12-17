@@ -1,0 +1,50 @@
+$
+osobny automobil
+Ferrari
+Autobazar Pestovatelska 4 Bratislava
+68957
+2012
+udrziavane cervene dvojdverove
+$
+afto
+FERRARI
+Autobazar niekde pod Mostom
+999999
+2012
+brutalne
+$
+kamion
+Renault magnum
+AUTO Modranska 5 Senec
+28000
+2016
+po havarii opraveny v dobrom stave
+$
+traktark
+Zetor
+Druzstvo Zvoncin
+1000
+1949
+novy garazovany
+$
+bicykel
+Bicykel
+Obchod Obchodna 25 Trnava
+10
+2010
+ma dve kolesa
+$
+autobus
+Karosa
+Karosa, a. s.
+100000
+1869
+brutalne pohodlne -_-
+$
+bicykel
+BICYKEL
+Moja garaz s.r.o.
+1199
+2016
+ma kosicek na rozky
+
